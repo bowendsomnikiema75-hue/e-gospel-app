@@ -1,0 +1,26 @@
+name: e_gospel_app
+description: "Application mobile officielle de e-gospel.com"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  # Affichage des pages du site directement dans l'application (expérience fluide)
+  webview_flutter: ^4.7.0
+  # Solution de repli : ouverture dans le navigateur externe si besoin
+  url_launcher: ^6.2.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/logo.png
