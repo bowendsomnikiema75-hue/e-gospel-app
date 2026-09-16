@@ -31,7 +31,7 @@ class EGospelApp extends StatelessWidget {
           backgroundColor: AppConfig.colorWhite,
           foregroundColor: AppConfig.colorBlack,
         ),
-        pageTransitionsTheme:PageTransitionsTheme(
+        pageTransitionsTheme: PageTransitionsTheme(
           builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
