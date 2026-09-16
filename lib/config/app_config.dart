@@ -39,14 +39,14 @@ class AppConfig {
   // ---------------------------------------------------------------------
   // URLs des rubriques (à adapter si besoin)
   // ---------------------------------------------------------------------
-  static const String musicUrl = 'https://e-gospel.com/musique/';
+   static const String musicUrl = 'https://e-gospel.com/music-chretienne-copy/';
   static const String videosUrl = 'https://e-gospel.com/gospel-nostalgie/';
-  static const String exhortationUrl = 'https://e-gospel.com/exhortation/';
-  static const String prayerUrl = 'https://e-gospel.com/priere/';
-  static const String churchesUrl = 'https://e-gospel.com/eglises/';
+  static const String exhortationUrl = 'https://e-gospel.com/predication-et-enseignement/';
+  static const String prayerUrl = 'https://e-gospel.com/ma-priere/';
+  static const String churchesUrl = 'https://e-gospel.com/eglise/';
   static const String memoryUrl = 'https://e-gospel.com/memoire/';
   static const String formationsUrl = 'https://e-gospel.com/formations/';
-  static const String eventsUrl = 'https://e-gospel.com/evenements/';
+  static const String eventsUrl = 'https://e-gospel.com/evenementiel/';
   static const String othersUrl = 'https://e-gospel.com/';
 
   // ---------------------------------------------------------------------
