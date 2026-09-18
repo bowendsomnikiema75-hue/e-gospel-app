@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../config/app_config.dart';
 
 /// Barre de navigation basse : Accueil / Menu. L'onglet actif se
-/// distingue uniquement par la couleur (orange) — pas de badge ni de
-/// forme supplémentaire derrière l'icône.
+/// distingue par la couleur (orange), avec une transition douce.
 class EGospelBottomNav extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -78,15 +77,24 @@ class _NavItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(active ? activeIcon : icon, color: color, size: 23),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 180),
+            child: Icon(
+              active ? activeIcon : icon,
+              key: ValueKey(active),
+              color: color,
+              size: 23,
+            ),
+          ),
           const SizedBox(height: 3),
-          Text(
-            label,
+          AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 180),
             style: TextStyle(
               color: color,
               fontSize: 11,
               fontWeight: active ? FontWeight.w600 : FontWeight.w400,
             ),
+            child: Text(label),
           ),
         ],
       ),

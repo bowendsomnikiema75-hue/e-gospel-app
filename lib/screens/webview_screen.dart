@@ -6,9 +6,8 @@ import '../services/web_navigation_service.dart';
 
 /// Affiche une page de e-gospel.com dans l'application.
 ///
-/// Gère 3 états : chargement (avec barre de progression réelle),
-/// contenu affiché, erreur réseau — important pour une bonne
-/// expérience sur les connexions parfois lentes/instables.
+/// Gère 3 états : chargement, contenu affiché, erreur réseau — important
+/// pour une bonne expérience sur les connexions parfois lentes/instables.
 class WebViewScreen extends StatefulWidget {
   final String url;
   final String title;
@@ -23,7 +22,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
   late final WebViewController _controller;
   bool _isLoading = true;
   bool _hasError = false;
-  double _progress = 0;
 
   @override
   void initState() {
@@ -38,12 +36,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
             setState(() {
               _isLoading = true;
               _hasError = false;
-              _progress = 0;
             });
-          },
-          onProgress: (progress) {
-            if (!mounted) return;
-            setState(() => _progress = progress / 100);
           },
           onPageFinished: (_) {
             if (!mounted) return;
@@ -65,7 +58,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
     setState(() {
       _isLoading = true;
       _hasError = false;
-      _progress = 0;
     });
     _controller.loadRequest(Uri.parse(widget.url));
   }
@@ -82,39 +74,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
           widget.title.isNotEmpty ? widget.title : AppConfig.appName,
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
-        actions: [
-          IconButton(
-            tooltip: 'Actualiser',
-            icon: const Icon(Icons.refresh_rounded),
-            onPressed: _hasError ? _retry : () => _controller.reload(),
-          ),
-          IconButton(
-            tooltip: 'Ouvrir dans le navigateur',
-            icon: const Icon(Icons.open_in_new_rounded, size: 20),
-            onPressed: () =>
-                WebNavigationService.openInExternalBrowser(widget.url),
-          ),
-        ],
-        bottom: _isLoading && !_hasError
-            ? PreferredSize(
-                preferredSize: const Size.fromHeight(2),
-                child: LinearProgressIndicator(
-                  value: _progress > 0 ? _progress : null,
-                  minHeight: 2,
-                  backgroundColor: AppConfig.colorBorder,
-                  color: AppConfig.colorOrange,
-                ),
-              )
-            : null,
       ),
       body: Stack(
         children: [
-          if (!_hasError)
-            AnimatedOpacity(
-              opacity: _isLoading ? 0.0 : 1.0,
-              duration: const Duration(milliseconds: 200),
-              child: WebViewWidget(controller: _controller),
-            ),
+          if (!_hasError) WebViewWidget(controller: _controller),
           if (_isLoading && !_hasError)
             const Center(
               child: CircularProgressIndicator(
@@ -143,10 +106,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
               style: TextStyle(color: AppConfig.colorBlack, fontSize: 15),
             ),
             const SizedBox(height: 20),
-            ElevatedButton.icon(
+            ElevatedButton(
               onPressed: _retry,
-              icon: const Icon(Icons.refresh_rounded, size: 18),
-              label: const Text('Réessayer'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppConfig.colorOrange,
                 foregroundColor: AppConfig.colorWhite,
@@ -156,6 +117,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
+              child: const Text('Réessayer'),
             ),
             const SizedBox(height: 8),
             TextButton(

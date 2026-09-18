@@ -1,17 +1,49 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
+import '../widgets/daily_verse_card.dart';
 import '../widgets/hero_banner.dart';
 import '../widgets/icon_grid_item.dart';
-import '../widgets/rubrique_list_tile.dart';
 
-/// Page d'accueil : en-tête, bannière, grille d'icônes des rubriques
-/// principales et liste détaillée de toutes les rubriques.
-class HomeScreen extends StatelessWidget {
-  /// Callback pour basculer sur l'onglet Menu depuis "Tout voir".
+/// Page d'accueil : en-tête, bannière, verset du jour et grille
+/// d'icônes des rubriques. La liste détaillée est dans l'onglet Menu.
+class HomeScreen extends StatefulWidget {
+  /// Callback pour basculer sur l'onglet Menu depuis "Voir toutes les
+  /// rubriques".
   final VoidCallback onSeeAllPressed;
 
   const HomeScreen({super.key, required this.onSeeAllPressed});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _fade;
+  late final Animation<Offset> _slide;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+    );
+    _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _slide = Tween<Offset>(
+      begin: const Offset(0, 0.03),
+      end: Offset.zero,
+    ).animate(_fade);
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,68 +53,55 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppConfig.colorWhite,
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 20),
-            HeroBanner(onCtaPressed: onSeeAllPressed),
-            const SizedBox(height: 26),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: AppConfig.featuredCategories.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                mainAxisSpacing: 18,
-                crossAxisSpacing: 8,
-                childAspectRatio: 0.85,
-              ),
-              itemBuilder: (context, index) {
-                return IconGridItem(
-                  category: AppConfig.featuredCategories[index],
-                );
-              },
-            ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: FadeTransition(
+          opacity: _fade,
+          child: SlideTransition(
+            position: _slide,
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
               children: [
-                const Text(
-                  'Rubriques',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    color: AppConfig.colorBlack,
+                _buildHeader(),
+                const SizedBox(height: 20),
+                HeroBanner(onCtaPressed: widget.onSeeAllPressed),
+                const SizedBox(height: 16),
+                const DailyVerseCard(),
+                const SizedBox(height: 26),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: AppConfig.featuredCategories.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    mainAxisSpacing: 18,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 0.85,
                   ),
+                  itemBuilder: (context, index) {
+                    return IconGridItem(
+                      category: AppConfig.featuredCategories[index],
+                    );
+                  },
                 ),
-                TextButton(
-                  onPressed: onSeeAllPressed,
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: const Size(0, 0),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                const SizedBox(height: 30),
+                OutlinedButton(
+                  onPressed: widget.onSeeAllPressed,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppConfig.colorBlack,
+                    side: const BorderSide(color: AppConfig.colorBorder),
+                    minimumSize: const Size.fromHeight(48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   child: const Text(
-                    'Tout voir',
-                    style: TextStyle(
-                      color: AppConfig.colorTextMuted,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                    ),
+                    'Voir toutes les rubriques',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                   ),
                 ),
               ],
             ),
-            ...AppConfig.categories.map(
-              (category) => Column(
-                children: [
-                  RubriqueListTile(category: category),
-                  const Divider(height: 1, color: AppConfig.colorBorder),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

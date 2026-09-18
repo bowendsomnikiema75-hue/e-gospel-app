@@ -60,7 +60,7 @@ class AppConfig {
       title: 'Musique, prière et enseignements',
       subtitle: 'Des contenus pour nourrir votre foi, où que vous soyez.',
       ctaLabel: 'Découvrir E-Gospel',
-      backgroundImage: 'assets/images/hero_prayer.jpg',
+      backgroundImage: 'assets/images/hero_banner.jpg',
     ),
   ];
 

@@ -19,7 +19,7 @@ class EGospelApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        fontFamily: 'Roboto',
+        fontFamily: 'Inter',
         scaffoldBackgroundColor: AppConfig.colorWhite,
         splashFactory: InkRipple.splashFactory,
         colorScheme: ColorScheme.fromSeed(
@@ -60,9 +60,18 @@ class _MainShellState extends State<MainShell> {
     ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: screens,
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 220),
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        transitionBuilder: (child, animation) => FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+        child: KeyedSubtree(
+          key: ValueKey(_currentIndex),
+          child: screens[_currentIndex],
+        ),
       ),
       bottomNavigationBar: EGospelBottomNav(
         currentIndex: _currentIndex,
