@@ -54,6 +54,9 @@ android {
             // Signature debug par défaut pour pouvoir tester facilement.
             // À remplacer par une vraie clé de signature avant publication sur le Play Store.
             signingConfig signingConfigs.debug
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }

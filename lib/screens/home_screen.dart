@@ -5,8 +5,8 @@ import '../widgets/hero_banner.dart';
 import '../widgets/icon_grid_item.dart';
 import '../widgets/rubrique_list_tile.dart';
 
-/// Page d'accueil : en-tête, bannière carrousel, grille d'icônes des
-/// rubriques principales et liste détaillée de toutes les rubriques.
+/// Page d'accueil : en-tête, bannière, grille d'icônes des rubriques
+/// principales et liste détaillée de toutes les rubriques.
 class HomeScreen extends StatelessWidget {
   /// Callback pour basculer sur l'onglet Menu depuis "Tout voir".
   final VoidCallback onSeeAllPressed;
@@ -22,21 +22,21 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppConfig.colorWhite,
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
           children: [
-            _buildHeader(context),
-            const SizedBox(height: 18),
+            _buildHeader(),
+            const SizedBox(height: 20),
             HeroBanner(onCtaPressed: onSeeAllPressed),
-            const SizedBox(height: 22),
+            const SizedBox(height: 26),
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: AppConfig.featuredCategories.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
-                mainAxisSpacing: 16,
+                mainAxisSpacing: 18,
                 crossAxisSpacing: 8,
-                childAspectRatio: 0.8,
+                childAspectRatio: 0.85,
               ),
               itemBuilder: (context, index) {
                 return IconGridItem(
@@ -44,35 +44,42 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const _SectionTitle('Rubriques'),
+                const Text(
+                  'Rubriques',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: AppConfig.colorBlack,
+                  ),
+                ),
                 TextButton(
                   onPressed: onSeeAllPressed,
-                  child: Row(
-                    children: const [
-                      Text(
-                        'Tout voir',
-                        style: TextStyle(
-                          color: AppConfig.colorOrange,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(width: 2),
-                      Icon(Icons.arrow_forward_rounded,
-                          color: AppConfig.colorOrange, size: 16),
-                    ],
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: const Size(0, 0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: const Text(
+                    'Tout voir',
+                    style: TextStyle(
+                      color: AppConfig.colorTextMuted,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 14),
             ...AppConfig.categories.map(
-              (category) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: RubriqueListTile(category: category),
+              (category) => Column(
+                children: [
+                  RubriqueListTile(category: category),
+                  const Divider(height: 1, color: AppConfig.colorBorder),
+                ],
               ),
             ),
           ],
@@ -81,110 +88,38 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader() {
     return Row(
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(10),
           child: Image.asset(
             'assets/images/logo.png',
-            width: 46,
-            height: 46,
+            width: 40,
+            height: 40,
             fit: BoxFit.cover,
           ),
         ),
         const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppConfig.appName,
-                style: const TextStyle(
-                  fontSize: 21,
-                  fontWeight: FontWeight.w800,
-                  color: AppConfig.colorOrange,
-                ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppConfig.appName,
+              style: const TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.w700,
+                color: AppConfig.colorBlack,
               ),
-              Text(
-                AppConfig.appSlogan,
-                style: TextStyle(
-                  fontSize: 11.5,
-                  color: AppConfig.colorBlack.withOpacity(0.6),
-                ),
-              ),
-            ],
-          ),
-        ),
-        InkWell(
-          borderRadius: BorderRadius.circular(22),
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Notifications bientôt disponibles'),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          },
-          child: Container(
-            width: 44,
-            height: 44,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: AppConfig.colorOrange.withOpacity(0.12),
-              shape: BoxShape.circle,
             ),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                const Icon(Icons.notifications_none_rounded,
-                    color: AppConfig.colorBlack),
-                Positioned(
-                  top: -1,
-                  right: -1,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: AppConfig.colorOrange,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ],
+            Text(
+              AppConfig.appSlogan,
+              style: const TextStyle(
+                fontSize: 11.5,
+                color: AppConfig.colorTextMuted,
+              ),
             ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SectionTitle extends StatelessWidget {
-  final String text;
-  const _SectionTitle(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          text,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            color: AppConfig.colorBlack,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Container(
-          width: 28,
-          height: 3,
-          decoration: BoxDecoration(
-            color: AppConfig.colorOrange,
-            borderRadius: BorderRadius.circular(2),
-          ),
+          ],
         ),
       ],
     );

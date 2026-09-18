@@ -1,43 +1,37 @@
 import 'package:flutter/material.dart';
 
-/// Couleur de fond utilisée pour les tuiles d'icônes (grille + vignettes),
-/// en alternance, comme sur la maquette.
-enum TileColor { orange, black, cream }
-
 /// Modèle simple représentant une rubrique du site e-gospel.com
 /// affichée sous forme de carte dans l'application.
 class AppCategory {
   final String title;
-  final String emoji;
   final String url;
   final IconData icon;
   final String description;
-  final TileColor tileColor;
+  /// Chemin vers une photo dédiée (assets/images/categories/...).
+  /// Si null, la rubrique affiche l'icône neutre à la place.
+  final String? imagePath;
 
   const AppCategory({
     required this.title,
-    required this.emoji,
     required this.url,
     required this.icon,
     required this.description,
-    required this.tileColor,
+    this.imagePath,
   });
 }
 
 /// Un slide de la bannière d'accueil (carrousel).
 class HeroSlide {
-  final String kicker;
-  final String titleLine1;
-  final String titleLine2Accent;
+  final String title;
   final String subtitle;
   final String ctaLabel;
+  final String? backgroundImage;
 
   const HeroSlide({
-    required this.kicker,
-    required this.titleLine1,
-    required this.titleLine2Accent,
+    required this.title,
     required this.subtitle,
     required this.ctaLabel,
+    this.backgroundImage,
   });
 }
 
@@ -55,10 +49,6 @@ class AppConfig {
   // ---------------------------------------------------------------------
   static const String appName = 'E-Gospel';
   static const String appSlogan = "La lumière de l'Évangile, partout";
-  static const String appIntro =
-      "L'application officielle de e-gospel.com. Retrouvez en un clic la "
-      "musique, les vidéos, la prière et toutes les rubriques de la "
-      "plateforme, directement depuis votre téléphone.";
   static const String baseUrl = 'https://e-gospel.com';
 
   // ---------------------------------------------------------------------
@@ -67,12 +57,10 @@ class AppConfig {
   // ---------------------------------------------------------------------
   static const List<HeroSlide> heroSlides = [
     HeroSlide(
-      kicker: 'VOTRE PORTAIL SPIRITUEL',
-      titleLine1: 'Musique, prière &',
-      titleLine2Accent: 'enseignements',
-      subtitle: 'Des contenus pour nourrir votre foi, vous encourager et '
-          'vous rapprocher de Dieu.',
+      title: 'Musique, prière et enseignements',
+      subtitle: 'Des contenus pour nourrir votre foi, où que vous soyez.',
       ctaLabel: 'Découvrir E-Gospel',
+      backgroundImage: 'assets/images/hero_prayer.jpg',
     ),
   ];
 
@@ -95,75 +83,65 @@ class AppConfig {
   static const List<AppCategory> categories = [
     AppCategory(
       title: 'Musique',
-      emoji: '🎵',
       url: musicUrl,
       icon: Icons.music_note_rounded,
       description: 'Chants, artistes et playlists gospel.',
-      tileColor: TileColor.orange,
     ),
     AppCategory(
       title: 'Vidéos',
-      emoji: '🎬',
       url: videosUrl,
-      icon: Icons.movie_creation_outlined,
+      icon: Icons.smart_display_outlined,
       description: 'Témoignages, concerts, interviews et bien plus.',
-      tileColor: TileColor.black,
+      imagePath: 'assets/images/categories/videos.jpg',
     ),
     AppCategory(
       title: 'Exhortations',
-      emoji: '📖',
       url: exhortationUrl,
       icon: Icons.menu_book_outlined,
       description: 'Des messages pour fortifier votre foi.',
-      tileColor: TileColor.cream,
+      imagePath: 'assets/images/categories/exhortations.jpg',
     ),
     AppCategory(
       title: 'Prière',
-      emoji: '🙏',
       url: prayerUrl,
       icon: Icons.volunteer_activism_outlined,
       description: 'Confiez vos intentions et demeurez dans la présence de Dieu.',
-      tileColor: TileColor.orange,
+      imagePath: 'assets/images/categories/priere.jpg',
     ),
     AppCategory(
       title: 'Églises',
-      emoji: '⛪',
       url: churchesUrl,
       icon: Icons.church_outlined,
       description: 'Découvrez les églises et assemblées de votre région.',
-      tileColor: TileColor.black,
+      imagePath: 'assets/images/categories/eglises.jpg',
     ),
     AppCategory(
       title: 'Mémoire',
-      emoji: '🕊️',
       url: memoryUrl,
       icon: Icons.image_outlined,
       description: 'Hommages et souvenirs de serviteurs de Dieu.',
-      tileColor: TileColor.cream,
+      imagePath: 'assets/images/categories/memoire.jpg',
     ),
     AppCategory(
       title: 'Formations',
-      emoji: '🎓',
       url: formationsUrl,
       icon: Icons.school_outlined,
       description: 'Apprenez, grandissez, équipez-vous pour le ministère.',
-      tileColor: TileColor.orange,
+      imagePath: 'assets/images/categories/formations.jpg',
     ),
     AppCategory(
       title: 'Événements',
-      emoji: '📅',
       url: eventsUrl,
       icon: Icons.calendar_month_outlined,
       description: 'Concerts, conférences, rencontres à ne pas manquer.',
-      tileColor: TileColor.black,
+      imagePath: 'assets/images/categories/evenements.jpg',
     ),
     AppCategory(
       title: 'Autres contenus',
-      emoji: '📚',
       url: othersUrl,
       icon: Icons.apps_rounded,
       description: 'Tout le reste du contenu disponible sur e-gospel.com.',
-      tileColor: TileColor.cream,
+      imagePath: 'assets/images/categories/autres.jpg',
     ),
   ];
 
@@ -178,6 +156,7 @@ class AppConfig {
   static const Color colorOrange = Color(0xFFF57905);
   static const Color colorBlack = Color(0xFF141414);
   static const Color colorWhite = Color(0xFFFFFFFF);
-  static const Color colorLightGrey = Color(0xFFF7F7F5);
-  static const Color colorBorder = Color(0xFFE8E5E0);
+  static const Color colorLightGrey = Color(0xFFF6F6F5);
+  static const Color colorBorder = Color(0xFFE7E5E2);
+  static const Color colorTextMuted = Color(0xFF6B6B6B);
 }

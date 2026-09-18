@@ -38,14 +38,11 @@ class CategoryCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppConfig.colorOrange.withOpacity(0.10),
+                decoration: const BoxDecoration(
+                  color: AppConfig.colorLightGrey,
                   shape: BoxShape.circle,
                 ),
-                child: Text(
-                  category.emoji,
-                  style: const TextStyle(fontSize: 22),
-                ),
+                child: Icon(category.icon, color: AppConfig.colorBlack, size: 22),
               ),
               const SizedBox(height: 10),
               Text(

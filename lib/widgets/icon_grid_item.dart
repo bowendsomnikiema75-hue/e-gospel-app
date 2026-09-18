@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import '../config/app_config.dart';
 import '../services/web_navigation_service.dart';
 
-/// Tuile carrée avec icône, utilisée dans la grille de rubriques de
-/// l'écran d'accueil (fond orange / noir / crème en alternance).
+/// Tuile d'icône utilisée dans la grille de rubriques de l'accueil.
+///
+/// Traitement volontairement neutre et unique pour toutes les rubriques
+/// (fond gris très clair, icône noire) : l'orange reste réservé aux
+/// actions principales, pas décoré sur chaque icône.
 class IconGridItem extends StatelessWidget {
   final AppCategory category;
 
@@ -12,8 +15,6 @@ class IconGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = _colorsFor(category.tileColor);
-
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: () => WebNavigationService.openPage(
@@ -25,14 +26,14 @@ class IconGridItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 56,
-            height: 56,
+            width: 52,
+            height: 52,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: colors.background,
-              borderRadius: BorderRadius.circular(16),
+              color: AppConfig.colorLightGrey,
+              shape: BoxShape.circle,
             ),
-            child: Icon(category.icon, color: colors.icon, size: 26),
+            child: Icon(category.icon, color: AppConfig.colorBlack, size: 22),
           ),
           const SizedBox(height: 8),
           Text(
@@ -41,8 +42,8 @@ class IconGridItem extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 12.5,
-              fontWeight: FontWeight.w600,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
               color: AppConfig.colorBlack,
             ),
           ),
@@ -50,30 +51,4 @@ class IconGridItem extends StatelessWidget {
       ),
     );
   }
-
-  _TileColors _colorsFor(TileColor color) {
-    switch (color) {
-      case TileColor.orange:
-        return const _TileColors(
-          background: AppConfig.colorOrange,
-          icon: AppConfig.colorWhite,
-        );
-      case TileColor.black:
-        return const _TileColors(
-          background: AppConfig.colorBlack,
-          icon: AppConfig.colorWhite,
-        );
-      case TileColor.cream:
-        return _TileColors(
-          background: AppConfig.colorOrange.withOpacity(0.16),
-          icon: AppConfig.colorBlack,
-        );
-    }
-  }
-}
-
-class _TileColors {
-  final Color background;
-  final Color icon;
-  const _TileColors({required this.background, required this.icon});
 }
