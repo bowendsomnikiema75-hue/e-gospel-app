@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'config/app_config.dart';
-import 'screens/explore_screen.dart';
 import 'screens/home_screen.dart';
-import 'screens/more_screen.dart';
+import 'screens/menu_screen.dart';
 import 'widgets/bottom_navigation.dart';
 
 void main() {
@@ -32,16 +31,15 @@ class EGospelApp extends StatelessWidget {
           backgroundColor: AppConfig.colorWhite,
           foregroundColor: AppConfig.colorBlack,
         ),
-        ),
       ),
       home: const MainShell(),
     );
   }
 }
 
-/// Coquille principale de l'app : gère la navigation basse entre les
-/// trois onglets (Accueil, Explorer, Menu), en conservant l'état de
-/// chaque écran (IndexedStack) pour une navigation instantanée.
+/// Coquille principale de l'app : gère la navigation basse entre
+/// l'écran Accueil et l'écran Menu, en conservant l'état de chaque
+/// écran (IndexedStack) pour une navigation instantanée et fluide.
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
 
@@ -52,20 +50,28 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
-  void _goToExplore() => setState(() => _currentIndex = 1);
+  void _goToMenu() => setState(() => _currentIndex = 1);
 
   @override
   Widget build(BuildContext context) {
     final screens = [
-      HomeScreen(onExplorePressed: _goToExplore),
-      const ExploreScreen(),
-      const MoreScreen(),
+      HomeScreen(onSeeAllPressed: _goToMenu),
+      const MenuScreen(),
     ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: screens,
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 220),
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        transitionBuilder: (child, animation) => FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+        child: KeyedSubtree(
+          key: ValueKey(_currentIndex),
+          child: screens[_currentIndex],
+        ),
       ),
       bottomNavigationBar: EGospelBottomNav(
         currentIndex: _currentIndex,
