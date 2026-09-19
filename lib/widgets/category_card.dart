@@ -5,10 +5,9 @@ import '../services/web_navigation_service.dart';
 
 /// Carte cliquable représentant une rubrique du site.
 ///
-/// Design sobre : fond blanc, bordure fine, coins arrondis, icône dans
-/// un cercle à contour orange — même traitement visuel que la rangée
-/// de rubriques de l'accueil, pour une charte cohérente dans toute
-/// l'application.
+/// Design sobre : fond blanc, bordure fine, coins légèrement arrondis,
+/// accent orange uniquement sur l'icône — pas de gradient ni d'ombre
+/// excessive, conformément à la charte demandée.
 class CategoryCard extends StatelessWidget {
   final AppCategory category;
 
@@ -39,14 +38,11 @@ class CategoryCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppConfig.colorWhite,
+                decoration: const BoxDecoration(
+                  color: AppConfig.colorLightGrey,
                   shape: BoxShape.circle,
-                  border:
-                      Border.all(color: AppConfig.colorOrange, width: 1.4),
                 ),
-                child: Icon(category.icon,
-                    color: AppConfig.colorOrange, size: 22),
+                child: Icon(category.icon, color: AppConfig.colorBlack, size: 22),
               ),
               const SizedBox(height: 10),
               Text(

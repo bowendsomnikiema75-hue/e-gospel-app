@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
-/// Modèle simple représentant une rubrique du site e-gospel.com.
+/// Modèle simple représentant une rubrique du site e-gospel.com
+/// affichée sous forme de carte dans l'application.
 class AppCategory {
   final String title;
   final String url;
   final IconData icon;
   final String description;
+  /// Chemin vers une photo dédiée (assets/images/categories/...).
+  /// Si null, la rubrique affiche l'icône neutre à la place.
   final String? imagePath;
 
   const AppCategory({
@@ -17,29 +20,27 @@ class AppCategory {
   });
 }
 
-/// Un slide de la bannière d'accueil.
+/// Un slide de la bannière d'accueil (carrousel).
 class HeroSlide {
-  final String eyebrow;
   final String title;
   final String subtitle;
   final String ctaLabel;
   final String? backgroundImage;
-  final String targetUrl;
 
   const HeroSlide({
-    required this.eyebrow,
     required this.title,
     required this.subtitle,
     required this.ctaLabel,
-    required this.targetUrl,
     this.backgroundImage,
   });
 }
 
 /// Configuration centrale de l'application.
 ///
-/// L'application sert de portail mobile : les boutons ouvrent les pages
-/// existantes de e-gospel.com, sans reconstruire le site dans Flutter.
+/// Toutes les URL du site sont regroupées ICI. Pour changer une adresse
+/// (ex: si une page change de chemin sur e-gospel.com), il suffit de
+/// modifier la valeur correspondante ci-dessous — aucun autre fichier
+/// n'a besoin d'être touché.
 class AppConfig {
   AppConfig._();
 
@@ -51,13 +52,24 @@ class AppConfig {
   static const String baseUrl = 'https://e-gospel.com';
 
   // ---------------------------------------------------------------------
-  // URLs des rubriques
+  // Bannière d'accueil (carrousel) — ajoute d'autres HeroSlide ici pour
+  // que le carrousel affiche plusieurs slides.
   // ---------------------------------------------------------------------
-  static const String musicUrl =
-      'https://e-gospel.com/music-chretienne-copy/';
+  static const List<HeroSlide> heroSlides = [
+    HeroSlide(
+      title: 'Musique, prière et enseignements',
+      subtitle: 'Des contenus pour nourrir votre foi, où que vous soyez.',
+      ctaLabel: 'Découvrir E-Gospel',
+      backgroundImage: 'assets/images/hero_banner.jpg',
+    ),
+  ];
+
+  // ---------------------------------------------------------------------
+  // URLs des rubriques (à adapter si besoin)
+  // ---------------------------------------------------------------------
+  static const String musicUrl = 'https://e-gospel.com/music-chretienne-copy/';
   static const String videosUrl = 'https://e-gospel.com/gospel-nostalgie/';
-  static const String exhortationUrl =
-      'https://e-gospel.com/predication-et-enseignement/';
+  static const String exhortationUrl = 'https://e-gospel.com/predication-et-enseignement/';
   static const String prayerUrl = 'https://e-gospel.com/ma-priere/';
   static const String churchesUrl = 'https://e-gospel.com/eglise/';
   static const String memoryUrl = 'https://e-gospel.com/memoire/';
@@ -66,29 +78,7 @@ class AppConfig {
   static const String othersUrl = 'https://e-gospel.com/';
 
   // ---------------------------------------------------------------------
-  // Bannière d'accueil
-  // ---------------------------------------------------------------------
-  static const List<HeroSlide> heroSlides = [
-    HeroSlide(
-      eyebrow: 'MUSIQUE',
-      title: 'Louez Dieu\nen esprit et en vérité',
-      subtitle: 'Des chants qui élèvent le cœur et nourrissent la foi.',
-      ctaLabel: 'Écouter maintenant',
-      targetUrl: musicUrl,
-      backgroundImage: 'assets/images/hero_banner.jpg',
-    ),
-    HeroSlide(
-      eyebrow: 'PRIÈRE',
-      title: 'Demeurez dans\nla présence de Dieu',
-      subtitle: 'Confiez vos intentions et priez chaque jour avec nous.',
-      ctaLabel: 'Prier maintenant',
-      targetUrl: prayerUrl,
-      backgroundImage: 'assets/images/hero_prayer.jpg',
-    ),
-  ];
-
-  // ---------------------------------------------------------------------
-  // Liste des rubriques
+  // Liste des rubriques utilisée par les écrans (accueil + menu)
   // ---------------------------------------------------------------------
   static const List<AppCategory> categories = [
     AppCategory(
@@ -155,9 +145,10 @@ class AppConfig {
     ),
   ];
 
-  // Les 5 premières rubriques apparaissent horizontalement sur l'accueil.
+  // Rubriques mises en avant sur la page d'accueil (les 8 premières,
+  // affichées en grille 4 colonnes x 2 lignes).
   static List<AppCategory> get featuredCategories =>
-      categories.take(5).toList();
+      categories.take(8).toList();
 
   // ---------------------------------------------------------------------
   // Charte graphique

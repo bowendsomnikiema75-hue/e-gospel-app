@@ -3,20 +3,13 @@ import 'package:flutter/material.dart';
 import '../config/app_config.dart';
 import '../services/web_navigation_service.dart';
 
-/// Carte de rubrique utilisée dans la rangée horizontale de l'accueil.
-///
-/// La première rubrique de la rangée est mise en avant avec un cercle
-/// orange plein (icône blanche) ; les autres ont un cercle blanc avec
-/// une icône orange — même logique visuelle que la maquette.
+/// Tuile d'icône de la grille de rubriques : cercle à contour orange,
+/// icône orange. Un seul traitement, appliqué à toutes les rubriques —
+/// c'est la répétition cohérente qui crée l'identité, pas la variété.
 class IconGridItem extends StatefulWidget {
   final AppCategory category;
-  final bool highlighted;
 
-  const IconGridItem({
-    super.key,
-    required this.category,
-    this.highlighted = false,
-  });
+  const IconGridItem({super.key, required this.category});
 
   @override
   State<IconGridItem> createState() => _IconGridItemState();
@@ -27,8 +20,6 @@ class _IconGridItemState extends State<IconGridItem> {
 
   @override
   Widget build(BuildContext context) {
-    final highlighted = widget.highlighted;
-
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTapDown: (_) => setState(() => _pressed = true),
@@ -40,55 +31,40 @@ class _IconGridItemState extends State<IconGridItem> {
         title: widget.category.title,
       ),
       child: AnimatedScale(
-        scale: _pressed ? 0.94 : 1.0,
+        scale: _pressed ? 0.92 : 1.0,
         duration: const Duration(milliseconds: 120),
         curve: Curves.easeOut,
-        child: Container(
-          width: 84,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
-          decoration: BoxDecoration(
-            color: AppConfig.colorWhite,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: AppConfig.colorBorder),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 46,
-                height: 46,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: highlighted
-                      ? AppConfig.colorOrange
-                      : AppConfig.colorWhite,
-                  shape: BoxShape.circle,
-                  border: highlighted
-                      ? null
-                      : Border.all(color: AppConfig.colorOrange, width: 1.4),
-                ),
-                child: Icon(
-                  widget.category.icon,
-                  color: highlighted
-                      ? AppConfig.colorWhite
-                      : AppConfig.colorOrange,
-                  size: 21,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppConfig.colorWhite,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppConfig.colorOrange.withOpacity(0.55),
+                  width: 1.3,
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                widget.category.title,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w600,
-                  color: AppConfig.colorBlack,
-                ),
+              child: Icon(widget.category.icon,
+                  color: AppConfig.colorOrange, size: 21),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              widget.category.title,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: AppConfig.colorBlack,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

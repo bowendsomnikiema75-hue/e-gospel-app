@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
-import '../services/web_navigation_service.dart';
 
 /// Un court verset biblique (texte du domaine public, traduction Louis
 /// Segond) et sa référence.
@@ -29,8 +28,7 @@ const List<_Verse> _verses = [
 ];
 
 /// Carte "Verset du jour" : un verset différent chaque jour, tiré d'une
-/// liste locale (aucune connexion requise). Fond photo + voile sombre
-/// pour la lisibilité, dans le même esprit que la bannière d'accueil.
+/// liste locale (aucune connexion requise).
 class DailyVerseCard extends StatelessWidget {
   const DailyVerseCard({super.key});
 
@@ -41,86 +39,61 @@ class DailyVerseCard extends StatelessWidget {
     );
     final verse = _verses[dayOfYear % _verses.length];
 
-    return GestureDetector(
-      onTap: () => WebNavigationService.openPage(
-        context,
-        AppConfig.prayerUrl,
-        title: 'Prière',
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      decoration: BoxDecoration(
+        color: AppConfig.colorWhite,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppConfig.colorOrange.withOpacity(0.35)),
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppConfig.colorOrange, width: 1.5),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(18, 16, 16, 18),
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/hero_prayer.jpg'),
-                fit: BoxFit.cover,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 26,
+                height: 26,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppConfig.colorOrange.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.menu_book_outlined,
+                    size: 14, color: AppConfig.colorOrange),
               ),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    AppConfig.colorBlack.withOpacity(0.72),
-                    AppConfig.colorBlack.withOpacity(0.30),
-                  ],
+              const SizedBox(width: 8),
+              const Text(
+                'VERSET DU JOUR',
+                style: TextStyle(
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.8,
+                  color: AppConfig.colorOrange,
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.menu_book_outlined,
-                          color: AppConfig.colorOrange, size: 15),
-                      const SizedBox(width: 6),
-                      const Text(
-                        'VERSET DU JOUR',
-                        style: TextStyle(
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.8,
-                          color: AppConfig.colorOrange,
-                        ),
-                      ),
-                      const Spacer(),
-                      Icon(Icons.chevron_right_rounded,
-                          color: AppConfig.colorWhite.withOpacity(0.85),
-                          size: 20),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    verse.text,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      height: 1.45,
-                      fontStyle: FontStyle.italic,
-                      color: AppConfig.colorWhite,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    verse.reference,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: AppConfig.colorWhite.withOpacity(0.75),
-                    ),
-                  ),
-                ],
-              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            verse.text,
+            style: const TextStyle(
+              fontSize: 14,
+              height: 1.45,
+              fontStyle: FontStyle.italic,
+              color: AppConfig.colorBlack,
             ),
           ),
-        ),
+          const SizedBox(height: 6),
+          Text(
+            verse.reference,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppConfig.colorTextMuted,
+            ),
+          ),
+        ],
       ),
     );
   }
