@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../config/app_config.dart';
 
-/// Barre de navigation basse : Accueil / Menu. L'onglet actif se
-/// distingue par la couleur (orange), avec une transition douce.
+/// Barre de navigation basse : Accueil / Explorer / Menu. L'onglet
+/// actif se distingue par la couleur (orange), avec une transition
+/// douce et un léger retour tactile.
 class EGospelBottomNav extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -33,7 +35,16 @@ class EGospelBottomNav extends StatelessWidget {
                   activeIcon: Icons.home_rounded,
                   label: 'Accueil',
                   active: currentIndex == 0,
-                  onTap: () => onTap(0),
+                  onTap: () => _handleTap(0),
+                ),
+              ),
+              Expanded(
+                child: _NavItem(
+                  icon: Icons.explore_outlined,
+                  activeIcon: Icons.explore_rounded,
+                  label: 'Explorer',
+                  active: currentIndex == 1,
+                  onTap: () => _handleTap(1),
                 ),
               ),
               Expanded(
@@ -41,8 +52,8 @@ class EGospelBottomNav extends StatelessWidget {
                   icon: Icons.menu_rounded,
                   activeIcon: Icons.menu_rounded,
                   label: 'Menu',
-                  active: currentIndex == 1,
-                  onTap: () => onTap(1),
+                  active: currentIndex == 2,
+                  onTap: () => _handleTap(2),
                 ),
               ),
             ],
@@ -50,6 +61,11 @@ class EGospelBottomNav extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _handleTap(int index) {
+    if (index != currentIndex) HapticFeedback.selectionClick();
+    onTap(index);
   }
 }
 

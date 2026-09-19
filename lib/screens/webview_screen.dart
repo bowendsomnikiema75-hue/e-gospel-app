@@ -6,8 +6,9 @@ import '../services/web_navigation_service.dart';
 
 /// Affiche une page de e-gospel.com dans l'application.
 ///
-/// Gère 3 états : chargement, contenu affiché, erreur réseau — important
-/// pour une bonne expérience sur les connexions parfois lentes/instables.
+/// Gère 3 états : chargement (avec barre de progression réelle),
+/// contenu affiché, erreur réseau — important pour une bonne
+/// expérience sur les connexions parfois lentes/instables.
 class WebViewScreen extends StatefulWidget {
   final String url;
   final String title;
@@ -22,6 +23,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   late final WebViewController _controller;
   bool _isLoading = true;
   bool _hasError = false;
+  double _progress = 0;
 
   @override
   void initState() {
@@ -36,7 +38,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
             setState(() {
               _isLoading = true;
               _hasError = false;
+              _progress = 0;
             });
+          },
+          onProgress: (progress) {
+            if (!mounted) return;
+            setState(() => _progress = progress / 100);
           },
           onPageFinished: (_) {
             if (!mounted) return;
@@ -58,6 +65,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     setState(() {
       _isLoading = true;
       _hasError = false;
+      _progress = 0;
     });
     _controller.loadRequest(Uri.parse(widget.url));
   }
@@ -74,6 +82,30 @@ class _WebViewScreenState extends State<WebViewScreen> {
           widget.title.isNotEmpty ? widget.title : AppConfig.appName,
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Actualiser',
+            icon: const Icon(Icons.refresh_rounded),
+            onPressed: _hasError ? _retry : () => _controller.reload(),
+          ),
+          IconButton(
+            tooltip: 'Ouvrir dans le navigateur',
+            icon: const Icon(Icons.open_in_new_rounded, size: 20),
+            onPressed: () =>
+                WebNavigationService.openInExternalBrowser(widget.url),
+          ),
+        ],
+        bottom: _isLoading && !_hasError
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(2),
+                child: LinearProgressIndicator(
+                  value: _progress > 0 ? _progress : null,
+                  minHeight: 2,
+                  backgroundColor: AppConfig.colorBorder,
+                  color: AppConfig.colorOrange,
+                ),
+              )
+            : null,
       ),
       body: Stack(
         children: [
