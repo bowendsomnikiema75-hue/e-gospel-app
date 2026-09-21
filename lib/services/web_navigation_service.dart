@@ -31,7 +31,7 @@ class WebNavigationService {
       // consultable, seule la fonction "près de moi" sera indisponible.
     }
     if (!context.mounted) return;
-    return Navigator.of(context).push(
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => WebViewScreen(url: url, title: title),
       ),
