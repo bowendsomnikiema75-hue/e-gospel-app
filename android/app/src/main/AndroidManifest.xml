@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Nécessaire pour charger les pages du site e-gospel.com -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Nécessaire pour la localisation dans la rubrique Églises -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:label="E-Gospel"

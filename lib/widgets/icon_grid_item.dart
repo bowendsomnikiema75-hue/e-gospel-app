@@ -29,6 +29,7 @@ class _IconGridItemState extends State<IconGridItem> {
         context,
         widget.category.url,
         title: widget.category.title,
+      requiresLocation: widget.category.requiresLocation,
       ),
       child: AnimatedScale(
         scale: _pressed ? 0.92 : 1.0,

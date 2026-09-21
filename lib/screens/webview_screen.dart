@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 import '../config/app_config.dart';
 import '../services/web_navigation_service.dart';
@@ -52,6 +53,23 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
       )
       ..loadRequest(Uri.parse(widget.url));
+
+    // La géolocalisation est bloquée par défaut dans une WebView, même si
+    // le téléphone l'autorise. On l'active ici, et on l'accorde
+    // automatiquement car il ne s'agit que de notre propre site de
+    // confiance (e-gospel.com) — jamais pour du contenu tiers non maîtrisé.
+    final platformController = _controller.platform;
+    if (platformController is AndroidWebViewController) {
+      platformController.setGeolocationEnabled(true);
+      platformController.setGeolocationPermissionsPromptCallbacks(
+        onShowPrompt: (request) async {
+          return const GeolocationPermissionsResponse(
+            allow: true,
+            retain: true,
+          );
+        },
+      );
+    }
   }
 
   void _retry() {

@@ -24,7 +24,8 @@ class CategoryCard extends StatelessWidget {
           context,
           category.url,
           title: category.title,
-        ),
+        requiresLocation: category.requiresLocation,
+      ),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
           decoration: BoxDecoration(

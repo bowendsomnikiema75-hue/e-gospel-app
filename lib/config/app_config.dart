@@ -10,6 +10,9 @@ class AppCategory {
   /// Chemin vers une photo dédiée (assets/images/categories/...).
   /// Si null, la rubrique affiche l'icône neutre à la place.
   final String? imagePath;
+  /// true si la page a besoin de la localisation du téléphone (ex: Églises,
+  /// pour afficher les assemblées à proximité).
+  final bool requiresLocation;
 
   const AppCategory({
     required this.title,
@@ -17,6 +20,7 @@ class AppCategory {
     required this.icon,
     required this.description,
     this.imagePath,
+    this.requiresLocation = false,
   });
 }
 
@@ -114,6 +118,7 @@ class AppConfig {
       icon: Icons.church_outlined,
       description: 'Découvrez les églises et assemblées de votre région.',
       imagePath: 'assets/images/categories/eglises.jpg',
+      requiresLocation: true,
     ),
     AppCategory(
       title: 'Mémoire',

@@ -12,6 +12,10 @@ dependencies:
   cupertino_icons: ^1.0.6
   # Affichage des pages du site directement dans l'application (expérience fluide)
   webview_flutter: ^4.7.0
+  # Nécessaire pour activer la géolocalisation dans la WebView (rubrique Églises)
+  webview_flutter_android: ^4.0.0
+  # Demande la permission de localisation au niveau du téléphone (Android)
+  permission_handler: ^11.3.1
   # Solution de repli : ouverture dans le navigateur externe si besoin
   url_launcher: ^6.2.5
 

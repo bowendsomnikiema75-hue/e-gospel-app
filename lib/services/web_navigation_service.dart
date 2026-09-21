@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../screens/webview_screen.dart';
@@ -14,11 +15,22 @@ class WebNavigationService {
 
   /// Ouvre [url] dans une page in-app (WebView) pour une expérience fluide,
   /// avec un titre affiché dans la barre du haut.
+  ///
+  /// Si [requiresLocation] est vrai, la permission de localisation du
+  /// téléphone est demandée avant d'ouvrir la page (sinon la géolocalisation
+  /// dans la WebView ne fonctionnerait pas, même si le code l'autorise).
   static Future<void> openPage(
     BuildContext context,
     String url, {
     String title = '',
-  }) {
+    bool requiresLocation = false,
+  }) async {
+    if (requiresLocation) {
+      await Permission.location.request();
+      // On ouvre la page même si l'utilisateur refuse : la rubrique reste
+      // consultable, seule la fonction "près de moi" sera indisponible.
+    }
+    if (!context.mounted) return;
     return Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => WebViewScreen(url: url, title: title),

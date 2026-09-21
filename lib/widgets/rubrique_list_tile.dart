@@ -19,6 +19,7 @@ class RubriqueListTile extends StatelessWidget {
         context,
         category.url,
         title: category.title,
+      requiresLocation: category.requiresLocation,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
