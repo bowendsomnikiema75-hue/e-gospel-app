@@ -5,14 +5,15 @@ allprojects {
     }
 }
 
-rootProject.buildDir = "../build"
+// Les fichiers compilés vont dans <projet>/build (là où Flutter les attend).
+rootProject.layout.buildDirectory.set(rootProject.layout.projectDirectory.dir("../build"))
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.layout.buildDirectory.set(rootProject.layout.buildDirectory.dir(project.name))
 }
 subprojects {
     project.evaluationDependsOn(":app")
 }
 
 tasks.register("clean", Delete) {
-    delete rootProject.buildDir
+    delete rootProject.layout.buildDirectory
 }
