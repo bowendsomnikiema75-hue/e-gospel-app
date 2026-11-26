@@ -1,0 +1,14 @@
+# Fichiers générés automatiquement — à ne pas verser sur GitHub
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+android/local.properties
+android/.gradle/
+android/app/.cxx/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Pods/
+.idea/
+*.iml
