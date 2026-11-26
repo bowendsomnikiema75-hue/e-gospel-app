@@ -1,0 +1,195 @@
+import 'package:flutter/material.dart';
+
+/// Modèle simple représentant une rubrique du site e-gospel.com
+/// affichée sous forme de carte dans l'application.
+class AppCategory {
+  final String title;
+  final String url;
+  final IconData icon;
+  final String description;
+  /// Chemin vers une photo dédiée (assets/images/categories/...).
+  /// Si null, la rubrique affiche l'icône neutre à la place.
+  final String? imagePath;
+  /// true si la page a besoin de la localisation du téléphone (ex: Églises,
+  /// pour afficher les assemblées à proximité).
+  final bool requiresLocation;
+
+  const AppCategory({
+    required this.title,
+    required this.url,
+    required this.icon,
+    required this.description,
+    this.imagePath,
+    this.requiresLocation = false,
+  });
+}
+
+/// Contenu de la bannière d'accueil (texte uniquement, sans photo).
+class HeroContent {
+  final String title;
+  final String titleAccent;
+  final String subtitle;
+  final String ctaLabel;
+
+  const HeroContent({
+    required this.title,
+    required this.titleAccent,
+    required this.subtitle,
+    required this.ctaLabel,
+  });
+}
+
+/// Configuration centrale de l'application.
+///
+/// Toutes les URL du site sont regroupées ICI. Pour changer une adresse
+/// (ex: si une page change de chemin sur e-gospel.com), il suffit de
+/// modifier la valeur correspondante ci-dessous — aucun autre fichier
+/// n'a besoin d'être touché.
+class AppConfig {
+  AppConfig._();
+
+  // ---------------------------------------------------------------------
+  // Identité
+  // ---------------------------------------------------------------------
+  static const String appName = 'E-Gospel';
+  static const String appSlogan = "La lumière de l'Évangile, partout";
+  static const String baseUrl = 'https://e-gospel.com';
+
+  // ---------------------------------------------------------------------
+  // Bannière d'accueil
+  // ---------------------------------------------------------------------
+  static const HeroContent hero = HeroContent(
+    title: 'Musique, prière et',
+    titleAccent: 'enseignements',
+    subtitle: 'Des contenus pour nourrir votre foi, où que vous soyez.',
+    ctaLabel: 'Découvrir E-Gospel',
+  );
+
+  // ---------------------------------------------------------------------
+  // URLs des rubriques (à adapter si besoin)
+  // ---------------------------------------------------------------------
+  static const String musicUrl = 'https://e-gospel.com/music-chretienne-copy/';
+  static const String videosUrl = 'https://e-gospel.com/gospel-nostalgie/';
+  static const String exhortationUrl = 'https://e-gospel.com/predication-et-enseignement/';
+  static const String prayerUrl = 'https://e-gospel.com/ma-priere/';
+  static const String churchesUrl = 'https://e-gospel.com/eglise/';
+  static const String memoryUrl = 'https://e-gospel.com/memoire/';
+  static const String formationsUrl = 'https://e-gospel.com/formations/';
+  static const String eventsUrl = 'https://e-gospel.com/evenementiel/';
+  static const String othersUrl = 'https://e-gospel.com/';
+
+  // ---------------------------------------------------------------------
+  // Liste des rubriques utilisée par les écrans (accueil + menu)
+  // ---------------------------------------------------------------------
+  static const List<AppCategory> categories = [
+    AppCategory(
+      title: 'Musique',
+      url: musicUrl,
+      icon: Icons.music_note_rounded,
+      description: 'Chants, artistes et playlists gospel.',
+    ),
+    AppCategory(
+      title: 'Vidéos',
+      url: videosUrl,
+      icon: Icons.smart_display_outlined,
+      description: 'Témoignages, concerts, interviews et bien plus.',
+      imagePath: 'assets/images/categories/videos.jpg',
+    ),
+    AppCategory(
+      title: 'Exhortations',
+      url: exhortationUrl,
+      icon: Icons.menu_book_outlined,
+      description: 'Des messages pour fortifier votre foi.',
+      imagePath: 'assets/images/categories/exhortations.jpg',
+    ),
+    AppCategory(
+      title: 'Prière',
+      url: prayerUrl,
+      icon: Icons.volunteer_activism_outlined,
+      description: 'Confiez vos intentions et demeurez dans la présence de Dieu.',
+      imagePath: 'assets/images/categories/priere.jpg',
+    ),
+    AppCategory(
+      title: 'Églises',
+      url: churchesUrl,
+      icon: Icons.church_outlined,
+      description: 'Découvrez les églises et assemblées de votre région.',
+      imagePath: 'assets/images/categories/eglises.jpg',
+      requiresLocation: true,
+    ),
+    AppCategory(
+      title: 'Mémoire',
+      url: memoryUrl,
+      icon: Icons.image_outlined,
+      description: 'Hommages et souvenirs de serviteurs de Dieu.',
+      imagePath: 'assets/images/categories/memoire.jpg',
+    ),
+    AppCategory(
+      title: 'Formations',
+      url: formationsUrl,
+      icon: Icons.school_outlined,
+      description: 'Apprenez, grandissez, équipez-vous pour le ministère.',
+      imagePath: 'assets/images/categories/formations.jpg',
+    ),
+    AppCategory(
+      title: 'Événements',
+      url: eventsUrl,
+      icon: Icons.calendar_month_outlined,
+      description: 'Concerts, conférences, rencontres à ne pas manquer.',
+      imagePath: 'assets/images/categories/evenements.jpg',
+    ),
+    AppCategory(
+      title: 'Autres contenus',
+      url: othersUrl,
+      icon: Icons.apps_rounded,
+      description: 'Tout le reste du contenu disponible sur e-gospel.com.',
+      imagePath: 'assets/images/categories/autres.jpg',
+    ),
+  ];
+
+  // Les 4 rubriques mises en avant sur la page d'accueil (grille de 4
+  // colonnes). Les autres rubriques sont dans l'onglet Menu ("Tout voir").
+  static const List<AppCategory> homeCategories = [
+    AppCategory(
+      title: 'Musique',
+      url: musicUrl,
+      icon: Icons.music_note_rounded,
+      description: 'Chants, artistes et playlists gospel.',
+    ),
+    AppCategory(
+      title: 'Vidéos',
+      url: videosUrl,
+      icon: Icons.smart_display_outlined,
+      description: 'Témoignages, concerts, interviews et bien plus.',
+    ),
+    AppCategory(
+      title: 'Études',
+      url: exhortationUrl,
+      icon: Icons.menu_book_outlined,
+      description: 'Des messages pour fortifier votre foi.',
+    ),
+    AppCategory(
+      title: 'Prière',
+      url: prayerUrl,
+      icon: Icons.volunteer_activism_outlined,
+      description: 'Confiez vos intentions et demeurez dans la présence de Dieu.',
+    ),
+  ];
+
+  // ---------------------------------------------------------------------
+  // Charte graphique
+  // ---------------------------------------------------------------------
+  static const Color colorOrange = Color(0xFFFF8200);
+  static const Color colorBlack = Color(0xFF171717);
+  static const Color colorWhite = Color(0xFFFFFFFF);
+  static const Color colorLightGrey = Color(0xFFF7F7F7);
+  static const Color colorBorder = Color(0xFFEEEEEE);
+  static const Color colorTextMuted = Color(0xFF757575);
+  static const Color colorCream = Color(0xFFFFF3E5);
+  static const Color colorIndicatorInactive = Color(0xFF777777);
+
+  // Rayons de coins (maquette : 12 / 20 / 28)
+  static const double radiusSmall = 12;
+  static const double radiusMedium = 20;
+  static const double radiusLarge = 28;
+}
