@@ -24,18 +24,18 @@ class AppCategory {
   });
 }
 
-/// Un slide de la bannière d'accueil (carrousel).
-class HeroSlide {
+/// Contenu de la bannière d'accueil (texte uniquement, sans photo).
+class HeroContent {
   final String title;
+  final String titleAccent;
   final String subtitle;
   final String ctaLabel;
-  final String? backgroundImage;
 
-  const HeroSlide({
+  const HeroContent({
     required this.title,
+    required this.titleAccent,
     required this.subtitle,
     required this.ctaLabel,
-    this.backgroundImage,
   });
 }
 
@@ -56,17 +56,14 @@ class AppConfig {
   static const String baseUrl = 'https://e-gospel.com';
 
   // ---------------------------------------------------------------------
-  // Bannière d'accueil (carrousel) — ajoute d'autres HeroSlide ici pour
-  // que le carrousel affiche plusieurs slides.
+  // Bannière d'accueil
   // ---------------------------------------------------------------------
-  static const List<HeroSlide> heroSlides = [
-    HeroSlide(
-      title: 'Musique, prière et enseignements',
-      subtitle: 'Des contenus pour nourrir votre foi, où que vous soyez.',
-      ctaLabel: 'Découvrir E-Gospel',
-      backgroundImage: 'assets/images/hero_banner.jpg',
-    ),
-  ];
+  static const HeroContent hero = HeroContent(
+    title: 'Musique, prière et',
+    titleAccent: 'enseignements',
+    subtitle: 'Des contenus pour nourrir votre foi, où que vous soyez.',
+    ctaLabel: 'Découvrir E-Gospel',
+  );
 
   // ---------------------------------------------------------------------
   // URLs des rubriques (à adapter si besoin)

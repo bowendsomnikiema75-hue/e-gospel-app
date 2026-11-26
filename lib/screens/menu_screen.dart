@@ -19,7 +19,7 @@ class MenuScreen extends StatelessWidget {
         elevation: 0.5,
         foregroundColor: AppConfig.colorBlack,
         title: const Text(
-          'Toutes les rubriques',
+          'Toutes les catégories',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         centerTitle: false,

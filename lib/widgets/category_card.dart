@@ -40,10 +40,10 @@ class CategoryCard extends StatelessWidget {
                 height: 48,
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
-                  color: AppConfig.colorLightGrey,
+                  color: AppConfig.colorBlack,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(category.icon, color: AppConfig.colorBlack, size: 22),
+                child: Icon(category.icon, color: AppConfig.colorOrange, size: 22),
               ),
               const SizedBox(height: 10),
               Text(

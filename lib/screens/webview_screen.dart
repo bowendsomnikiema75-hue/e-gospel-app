@@ -23,6 +23,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   late final WebViewController _controller;
   bool _isLoading = true;
   bool _hasError = false;
+  int _progress = 0;
 
   @override
   void initState() {
@@ -32,6 +33,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ..setBackgroundColor(AppConfig.colorWhite)
       ..setNavigationDelegate(
         NavigationDelegate(
+          onProgress: (progress) {
+            if (!mounted) return;
+            setState(() => _progress = progress);
+          },
           onPageStarted: (_) {
             if (!mounted) return;
             setState(() {
@@ -97,9 +102,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
         children: [
           if (!_hasError) WebViewWidget(controller: _controller),
           if (_isLoading && !_hasError)
-            const Center(
-              child: CircularProgressIndicator(
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: LinearProgressIndicator(
+                value: _progress > 0 ? _progress / 100 : null,
+                minHeight: 3,
                 color: AppConfig.colorOrange,
+                backgroundColor: AppConfig.colorBorder,
               ),
             ),
           if (_hasError) _buildErrorState(),

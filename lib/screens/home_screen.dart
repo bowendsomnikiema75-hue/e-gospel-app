@@ -5,11 +5,11 @@ import '../widgets/daily_verse_card.dart';
 import '../widgets/hero_banner.dart';
 import '../widgets/icon_grid_item.dart';
 
-/// Page d'accueil : en-tête, bannière, verset du jour et grille
-/// d'icônes des rubriques. La liste détaillée est dans l'onglet Menu.
+/// Page d'accueil : en-tête, bannière, verset du jour et grille des
+/// catégories. La liste complète est dans l'onglet Menu.
 class HomeScreen extends StatefulWidget {
-  /// Callback pour basculer sur l'onglet Menu depuis "Voir toutes les
-  /// rubriques".
+  /// Callback pour basculer sur l'onglet Menu (bouton de la bannière et
+  /// "Tout voir").
   final VoidCallback onSeeAllPressed;
 
   const HomeScreen({super.key, required this.onSeeAllPressed});
@@ -58,21 +58,53 @@ class _HomeScreenState extends State<HomeScreen>
           child: SlideTransition(
             position: _slide,
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
               children: [
                 _buildHeader(),
                 const SizedBox(height: 20),
                 HeroBanner(onCtaPressed: widget.onSeeAllPressed),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
                 const DailyVerseCard(),
-                const SizedBox(height: 26),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Catégories',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: AppConfig.colorBlack,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: widget.onSeeAllPressed,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 4),
+                        minimumSize: const Size(0, 0),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: const Text(
+                        'Tout voir',
+                        style: TextStyle(
+                          color: AppConfig.colorOrange,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: AppConfig.featuredCategories.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
-                    mainAxisSpacing: 18,
+                    mainAxisSpacing: 20,
                     crossAxisSpacing: 8,
                     childAspectRatio: 0.85,
                   ),
@@ -81,23 +113,6 @@ class _HomeScreenState extends State<HomeScreen>
                       category: AppConfig.featuredCategories[index],
                     );
                   },
-                ),
-                const SizedBox(height: 30),
-                OutlinedButton(
-                  onPressed: widget.onSeeAllPressed,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppConfig.colorBlack,
-                    side: const BorderSide(color: AppConfig.colorBorder),
-                    minimumSize: const Size.fromHeight(48),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    'Voir toutes les rubriques',
-                    style:
-                        TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                  ),
                 ),
               ],
             ),
@@ -110,26 +125,29 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildHeader() {
     return Row(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Image.asset(
-            'assets/images/logo.png',
-            width: 40,
-            height: 40,
-            fit: BoxFit.cover,
-          ),
+        Image.asset(
+          'assets/images/logo.png',
+          width: 46,
+          height: 46,
         ),
         const SizedBox(width: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              AppConfig.appName,
-              style: const TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w700,
-                color: AppConfig.colorBlack,
+            const Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'E-',
+                    style: TextStyle(color: AppConfig.colorBlack),
+                  ),
+                  TextSpan(
+                    text: 'Gospel',
+                    style: TextStyle(color: AppConfig.colorOrange),
+                  ),
+                ],
               ),
+              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
             ),
             Text(
               AppConfig.appSlogan,

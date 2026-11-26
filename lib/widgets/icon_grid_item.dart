@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../config/app_config.dart';
 import '../services/web_navigation_service.dart';
 
-/// Tuile d'icône de la grille de rubriques : cercle à contour orange,
-/// icône orange. Un seul traitement, appliqué à toutes les rubriques —
-/// c'est la répétition cohérente qui crée l'identité, pas la variété.
+/// Tuile d'icône de la grille de rubriques : cercle noir, icône orange.
+/// Un seul traitement, appliqué à toutes les rubriques — c'est la
+/// répétition cohérente qui crée l'identité, pas la variété.
 class IconGridItem extends StatefulWidget {
   final AppCategory category;
 
@@ -39,19 +39,15 @@ class _IconGridItemState extends State<IconGridItem> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 52,
-              height: 52,
+              width: 54,
+              height: 54,
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppConfig.colorWhite,
+              decoration: const BoxDecoration(
+                color: AppConfig.colorBlack,
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppConfig.colorOrange.withOpacity(0.55),
-                  width: 1.3,
-                ),
               ),
               child: Icon(widget.category.icon,
-                  color: AppConfig.colorOrange, size: 21),
+                  color: AppConfig.colorOrange, size: 24),
             ),
             const SizedBox(height: 8),
             Text(
