@@ -1,0 +1,90 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+if (flutterVersionCode == null) {
+    flutterVersionCode = "1"
+}
+
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
+if (flutterVersionName == null) {
+    flutterVersionName = "1.0"
+}
+
+// Clé de signature fournie par Codemagic (réglage "Android code signing").
+// Ces variables n'existent que sur Codemagic, jamais dans le dépôt.
+def cmKeystorePath = System.getenv("CM_KEYSTORE_PATH")
+
+android {
+    namespace "com.egospel.app"
+    compileSdk flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+    }
+
+    defaultConfig {
+        // Identifiant unique de l'application (à ne plus changer après publication)
+        applicationId "com.egospel.app"
+        minSdkVersion 21
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
+
+    signingConfigs {
+        release {
+            if (cmKeystorePath != null) {
+                storeFile file(cmKeystorePath)
+                storePassword System.getenv("CM_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("CM_KEY_ALIAS")
+                keyPassword System.getenv("CM_KEY_PASSWORD")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (cmKeystorePath != null) {
+                // Build Release officiel : signé avec TA clé (egospel-release.jks)
+                signingConfig signingConfigs.release
+            } else {
+                // Pas de clé fournie : clé de test, REFUSÉE par Google Play
+                logger.warn("ATTENTION : aucune clé de signature Codemagic trouvée, le build Release est signé avec la clé de DEBUG.")
+                signingConfig signingConfigs.debug
+            }
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
+
+flutter {
+    source "../.."
+}
+
+dependencies {}
