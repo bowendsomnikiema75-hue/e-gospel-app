@@ -1,196 +1,217 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
-import 'hero_illustrations.dart';
+import '../services/web_navigation_service.dart';
 
-/// Bannière d'accueil (hauteur 360, coins 28) : fond noir, illustration
-/// vectorielle à droite (3 scènes qui défilent, une par thème), dégradé
-/// noir à gauche pour la lisibilité, titre avec un mot en orange, bouton
-/// et 3 indicateurs de carrousel.
+/// Bannière d'accueil : carrousel de 3 slides (glisser pour changer).
+/// Fond noir, illustration à droite, titre blanc avec une fin en orange.
 class HeroBanner extends StatefulWidget {
-  final VoidCallback onCtaPressed;
+  /// Action du bouton des slides qui n'ont pas de page dédiée
+  /// (ouvre le menu complet).
+  final VoidCallback onDiscover;
 
-  const HeroBanner({super.key, required this.onCtaPressed});
+  const HeroBanner({super.key, required this.onDiscover});
 
   @override
   State<HeroBanner> createState() => _HeroBannerState();
 }
 
 class _HeroBannerState extends State<HeroBanner> {
-  static const int _pageCount = 3;
-
   final PageController _controller = PageController();
-  Timer? _timer;
   int _page = 0;
 
   @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
-      if (!mounted || !_controller.hasClients) return;
-      _controller.animateToPage(
-        (_page + 1) % _pageCount,
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
-
-  @override
   void dispose() {
-    _timer?.cancel();
     _controller.dispose();
     super.dispose();
   }
 
+  void _onCta(HeroSlide slide) {
+    final url = slide.url;
+    if (url == null) {
+      widget.onDiscover();
+      return;
+    }
+    WebNavigationService.openPage(
+      context,
+      url,
+      title: slide.urlTitle,
+      requiresLocation: slide.requiresLocation,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    const hero = AppConfig.hero;
+    final slides = AppConfig.heroSlides;
+    // La hauteur suit la taille de police du téléphone (accessibilité).
+    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
+    final height = 360.0 * (textScale > 1 ? textScale : 1.0);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppConfig.radiusLarge),
-      child: Container(
-        height: 360,
-        width: double.infinity,
-        color: AppConfig.colorBlack,
-        child: LayoutBuilder(
-          builder: (context, box) {
-            final w = box.maxWidth;
-            return Stack(
-              children: [
-                // Illustration (à droite), balayable du doigt.
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  right: 0,
-                  width: w * 0.7,
-                  child: PageView.builder(
-                    controller: _controller,
-                    itemCount: _pageCount,
-                    onPageChanged: (i) => setState(() => _page = i),
-                    itemBuilder: (_, i) => HeroIllustration(index: i),
-                  ),
-                ),
-                // Dégradé 90° : noir plein -> transparent.
-                Positioned.fill(
-                  child: IgnorePointer(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            AppConfig.colorBlack,
-                            AppConfig.colorBlack.withOpacity(0.85),
-                            AppConfig.colorBlack.withOpacity(0),
-                          ],
-                          stops: const [0, 0.45, 1],
-                        ),
-                      ),
+      child: SizedBox(
+        height: height,
+        child: Stack(
+          children: [
+            PageView.builder(
+              controller: _controller,
+              itemCount: slides.length,
+              onPageChanged: (index) => setState(() => _page = index),
+              itemBuilder: (context, index) => _SlideView(
+                slide: slides[index],
+                onPressed: () => _onCta(slides[index]),
+              ),
+            ),
+            Positioned(
+              left: 24,
+              bottom: 22,
+              child: Row(
+                children: List.generate(slides.length, (index) {
+                  final active = index == _page;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    margin: const EdgeInsets.only(right: 6),
+                    width: active ? 20 : 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: active
+                          ? AppConfig.colorOrange
+                          : const Color(0xFF777777),
+                      borderRadius: BorderRadius.circular(3),
                     ),
-                  ),
+                  );
+                }),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SlideView extends StatelessWidget {
+  final HeroSlide slide;
+  final VoidCallback onPressed;
+
+  const _SlideView({required this.slide, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppConfig.colorBlack,
+      child: Stack(
+        children: [
+          // Illustration à droite, sur toute la hauteur
+          Positioned.fill(
+            child: Image.asset(
+              slide.illustration,
+              fit: BoxFit.fitHeight,
+              alignment: Alignment.centerRight,
+            ),
+          ),
+          // Voile noir de gauche à droite : le texte reste lisible
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  stops: const [0.0, 0.40, 0.72],
+                  colors: [
+                    AppConfig.colorBlack,
+                    AppConfig.colorBlack.withOpacity(0.85),
+                    AppConfig.colorBlack.withOpacity(0.0),
+                  ],
                 ),
-                // Contenu.
-                Positioned.fill(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+              ),
+            ),
+          ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final titleSize =
+                  (constraints.maxWidth * 0.078).clamp(21.0, 28.0).toDouble();
+              return Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 0, 48),
+                  child: SizedBox(
+                    width: constraints.maxWidth * 0.62,
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Spacer(),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: w * 0.74),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        Text.rich(
+                          TextSpan(
                             children: [
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: '${hero.title}\n',
-                                      style: const TextStyle(
-                                          color: AppConfig.colorWhite),
-                                    ),
-                                    TextSpan(
-                                      text: hero.titleAccent,
-                                      style: const TextStyle(
-                                          color: AppConfig.colorOrange),
-                                    ),
-                                  ],
-                                ),
+                              TextSpan(
+                                text: '${slide.title} ',
                                 style: const TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.2,
-                                ),
+                                    color: AppConfig.colorWhite),
                               ),
-                              const SizedBox(height: 12),
-                              Text(
-                                hero.subtitle,
-                                style: TextStyle(
-                                  color: AppConfig.colorWhite.withOpacity(0.8),
-                                  fontSize: 14,
-                                  height: 1.45,
-                                ),
+                              TextSpan(
+                                text: slide.accent,
+                                style: const TextStyle(
+                                    color: AppConfig.colorOrange),
                               ),
                             ],
                           ),
+                          style: TextStyle(
+                            fontSize: titleSize,
+                            fontWeight: FontWeight.w700,
+                            height: 1.2,
+                          ),
                         ),
-                        const SizedBox(height: 22),
+                        const SizedBox(height: 12),
+                        Text(
+                          slide.description,
+                          style: TextStyle(
+                            color: AppConfig.colorWhite.withOpacity(0.78),
+                            fontSize: 13.5,
+                            height: 1.45,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: widget.onCtaPressed,
+                          onPressed: onPressed,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppConfig.colorOrange,
                             foregroundColor: AppConfig.colorWhite,
                             elevation: 0,
-                            padding: const EdgeInsets.fromLTRB(22, 14, 14, 14),
+                            padding: const EdgeInsets.fromLTRB(18, 13, 12, 13),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(
+                                  AppConfig.radiusMedium),
                             ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                hero.ctaLabel,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14.5,
+                              Flexible(
+                                child: Text(
+                                  slide.ctaLabel,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 6),
-                              const Icon(Icons.chevron_right_rounded, size: 22),
+                              const SizedBox(width: 2),
+                              const Icon(Icons.chevron_right_rounded,
+                                  size: 20),
                             ],
                           ),
-                        ),
-                        const Spacer(),
-                        Row(
-                          children: List.generate(_pageCount, (i) {
-                            final active = i == _page;
-                            return AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
-                              margin: const EdgeInsets.only(right: 6),
-                              width: active ? 22 : 7,
-                              height: 7,
-                              decoration: BoxDecoration(
-                                color: active
-                                    ? AppConfig.colorOrange
-                                    : AppConfig.colorIndicatorInactive,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            );
-                          }),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ],
-            );
-          },
-        ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

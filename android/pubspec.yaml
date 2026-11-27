@@ -28,7 +28,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    - assets/images/categories/
   fonts:
     - family: Inter
       fonts:
@@ -38,10 +37,6 @@ flutter:
           weight: 500
         - asset: assets/fonts/Inter-Variable.ttf
           weight: 600
-        - asset: assets/fonts/Inter-Variable.ttf
-          weight: 700
-        - asset: assets/fonts/Inter-Variable.ttf
-          weight: 800
         - asset: assets/fonts/Inter-Variable.ttf
           weight: 700
         - asset: assets/fonts/Inter-Variable.ttf

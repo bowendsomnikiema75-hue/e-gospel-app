@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import '../config/app_config.dart';
 import '../widgets/daily_verse_card.dart';
 import '../widgets/hero_banner.dart';
-import '../widgets/home_category_tile.dart';
+import '../widgets/icon_grid_item.dart';
 
-/// Page d'accueil : en-tête, bannière, verset du jour et grille des
-/// catégories. La liste complète est dans l'onglet Menu.
+/// Page d'accueil : en-tête, bannières, verset du jour et catégories.
+/// La liste complète des catégories est dans l'onglet Menu.
 class HomeScreen extends StatefulWidget {
-  /// Callback pour basculer sur l'onglet Menu (bouton de la bannière et
-  /// "Tout voir").
+  /// Bascule sur l'onglet Menu ("Découvrir E-Gospel" et "Tout voir").
   final VoidCallback onSeeAllPressed;
 
   const HomeScreen({super.key, required this.onSeeAllPressed});
@@ -56,64 +55,65 @@ class _HomeScreenState extends State<HomeScreen>
             position: _slide,
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 480),
+                constraints:
+                    const BoxConstraints(maxWidth: AppConfig.maxContentWidth),
                 child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 8),
-                HeroBanner(onCtaPressed: widget.onSeeAllPressed),
-                const SizedBox(height: 16),
-                const DailyVerseCard(),
-                const SizedBox(height: 28),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
                   children: [
-                    const Text(
-                      'Catégories',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: AppConfig.colorBlack,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: widget.onSeeAllPressed,
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 4),
-                        minimumSize: const Size(0, 0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: const Text(
-                        'Tout voir',
-                        style: TextStyle(
-                          color: AppConfig.colorOrange,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13.5,
+                    _buildHeader(),
+                    const SizedBox(height: 8),
+                    HeroBanner(onDiscover: widget.onSeeAllPressed),
+                    const SizedBox(height: 20),
+                    const DailyVerseCard(),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Catégories',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: AppConfig.colorBlack,
+                          ),
                         ),
+                        TextButton(
+                          onPressed: widget.onSeeAllPressed,
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4, vertical: 4),
+                            minimumSize: const Size(0, 0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text(
+                            'Tout voir',
+                            style: TextStyle(
+                              color: AppConfig.colorOrange,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: AppConfig.featuredCategories.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 16,
+                        mainAxisExtent: 112,
+                      ),
+                      itemBuilder: (context, index) => IconGridItem(
+                        category: AppConfig.featuredCategories[index],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    for (var i = 0;
-                        i < AppConfig.homeCategories.length;
-                        i++) ...[
-                      if (i > 0) const SizedBox(width: 12),
-                      Expanded(
-                        child: HomeCategoryTile(
-                          category: AppConfig.homeCategories[i],
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            ),
               ),
             ),
           ),
@@ -159,42 +159,11 @@ class _HomeScreenState extends State<HomeScreen>
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    fontSize: 12,
-                    height: 1.3,
+                    fontSize: 13,
                     color: AppConfig.colorTextMuted,
                   ),
                 ),
               ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Material(
-            color: AppConfig.colorLightGrey,
-            shape: const CircleBorder(
-              side: BorderSide(color: AppConfig.colorBorder),
-            ),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    const SnackBar(
-                      content: Text('Aucune notification pour le moment'),
-                      duration: Duration(seconds: 2),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-              },
-              child: const SizedBox(
-                width: 44,
-                height: 44,
-                child: Icon(
-                  Icons.notifications_none_rounded,
-                  size: 22,
-                  color: AppConfig.colorBlack,
-                ),
-              ),
             ),
           ),
         ],

@@ -17,9 +17,9 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: AppConfig.colorWhite,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(AppConfig.radiusMedium),
       child: InkWell(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppConfig.radiusMedium),
         onTap: () => WebNavigationService.openPage(
           context,
           category.url,
@@ -29,21 +29,21 @@ class CategoryCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppConfig.radiusMedium),
             border: Border.all(color: AppConfig.colorBorder),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 52,
+                height: 52,
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppConfig.colorBlack,
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(18),
                 ),
-                child: Icon(category.icon, color: AppConfig.colorOrange, size: 22),
+                child: Icon(category.icon, color: AppConfig.colorOrange, size: 26),
               ),
               const SizedBox(height: 10),
               Text(
