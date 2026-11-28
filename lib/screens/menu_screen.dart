@@ -25,18 +25,34 @@ class MenuScreen extends StatelessWidget {
         centerTitle: false,
       ),
       body: SafeArea(
-        child: GridView.builder(
-          padding: const EdgeInsets.all(20),
-          itemCount: AppConfig.categories.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: 14,
-            crossAxisSpacing: 14,
-            childAspectRatio: 0.95,
-          ),
-          itemBuilder: (context, index) {
-            return CategoryCard(category: AppConfig.categories[index]);
-          },
+        child: Column(
+          children: [
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.all(20),
+                itemCount: AppConfig.categories.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  mainAxisSpacing: 14,
+                  crossAxisSpacing: 14,
+                  childAspectRatio: 0.95,
+                ),
+                itemBuilder: (context, index) {
+                  return CategoryCard(category: AppConfig.categories[index]);
+                },
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 12),
+              child: Text(
+                AppConfig.versionLabel,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppConfig.colorTextMuted,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

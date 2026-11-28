@@ -5,11 +5,10 @@ import '../widgets/daily_verse_card.dart';
 import '../widgets/hero_banner.dart';
 import '../widgets/icon_grid_item.dart';
 
-/// Page d'accueil : en-tête, bannière, verset du jour et grille des
-/// catégories. La liste complète est dans l'onglet Menu.
+/// Page d'accueil : en-tête, bannières, verset du jour et catégories.
+/// La liste complète des catégories est dans l'onglet Menu.
 class HomeScreen extends StatefulWidget {
-  /// Callback pour basculer sur l'onglet Menu (bouton de la bannière et
-  /// "Tout voir").
+  /// Bascule sur l'onglet Menu ("Découvrir E-Gospel" et "Tout voir").
   final VoidCallback onSeeAllPressed;
 
   const HomeScreen({super.key, required this.onSeeAllPressed});
@@ -47,9 +46,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final crossAxisCount = width >= 600 ? 6 : 4;
-
     return Scaffold(
       backgroundColor: AppConfig.colorWhite,
       body: SafeArea(
@@ -57,64 +53,68 @@ class _HomeScreenState extends State<HomeScreen>
           opacity: _fade,
           child: SlideTransition(
             position: _slide,
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 20),
-                HeroBanner(onCtaPressed: widget.onSeeAllPressed),
-                const SizedBox(height: 14),
-                const DailyVerseCard(),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+            child: Center(
+              child: ConstrainedBox(
+                constraints:
+                    const BoxConstraints(maxWidth: AppConfig.maxContentWidth),
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
                   children: [
-                    const Text(
-                      'Catégories',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: AppConfig.colorBlack,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: widget.onSeeAllPressed,
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 4),
-                        minimumSize: const Size(0, 0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: const Text(
-                        'Tout voir',
-                        style: TextStyle(
-                          color: AppConfig.colorOrange,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13.5,
+                    _buildHeader(),
+                    const SizedBox(height: 8),
+                    HeroBanner(onDiscover: widget.onSeeAllPressed),
+                    const SizedBox(height: 20),
+                    const DailyVerseCard(),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Catégories',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: AppConfig.colorBlack,
+                          ),
                         ),
+                        TextButton(
+                          onPressed: widget.onSeeAllPressed,
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4, vertical: 4),
+                            minimumSize: const Size(0, 0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text(
+                            'Tout voir',
+                            style: TextStyle(
+                              color: AppConfig.colorOrange,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: AppConfig.featuredCategories.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 16,
+                        mainAxisExtent: 112,
+                      ),
+                      itemBuilder: (context, index) => IconGridItem(
+                        category: AppConfig.featuredCategories[index],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: AppConfig.featuredCategories.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 8,
-                    childAspectRatio: 0.85,
-                  ),
-                  itemBuilder: (context, index) {
-                    return IconGridItem(
-                      category: AppConfig.featuredCategories[index],
-                    );
-                  },
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -123,42 +123,51 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildHeader() {
-    return Row(
-      children: [
-        Image.asset(
-          'assets/images/logo.png',
-          width: 46,
-          height: 46,
-        ),
-        const SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text.rich(
-              TextSpan(
-                children: [
+    return SizedBox(
+      height: 96,
+      child: Row(
+        children: [
+          Image.asset(
+            'assets/images/logo.png',
+            width: 64,
+            height: 64,
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text.rich(
                   TextSpan(
-                    text: 'E-',
-                    style: TextStyle(color: AppConfig.colorBlack),
+                    children: [
+                      TextSpan(
+                        text: 'E-',
+                        style: TextStyle(color: AppConfig.colorBlack),
+                      ),
+                      TextSpan(
+                        text: 'Gospel',
+                        style: TextStyle(color: AppConfig.colorOrange),
+                      ),
+                    ],
                   ),
-                  TextSpan(
-                    text: 'Gospel',
-                    style: TextStyle(color: AppConfig.colorOrange),
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  AppConfig.appSlogan,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppConfig.colorTextMuted,
                   ),
-                ],
-              ),
-              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
+                ),
+              ],
             ),
-            Text(
-              AppConfig.appSlogan,
-              style: const TextStyle(
-                fontSize: 11.5,
-                color: AppConfig.colorTextMuted,
-              ),
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }

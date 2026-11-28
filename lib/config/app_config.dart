@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// Modèle simple représentant une rubrique du site e-gospel.com
-/// affichée sous forme de carte dans l'application.
+/// Une rubrique du site e-gospel.com, affichée sous forme de tuile.
 class AppCategory {
   final String title;
   final String url;
   final IconData icon;
   final String description;
-  /// Chemin vers une photo dédiée (assets/images/categories/...).
-  /// Si null, la rubrique affiche l'icône neutre à la place.
-  final String? imagePath;
-  /// true si la page a besoin de la localisation du téléphone (ex: Églises,
+
+  /// true si la page a besoin de la localisation du téléphone (ex : Églises,
   /// pour afficher les assemblées à proximité).
   final bool requiresLocation;
 
@@ -19,30 +16,42 @@ class AppCategory {
     required this.url,
     required this.icon,
     required this.description,
-    this.imagePath,
     this.requiresLocation = false,
   });
 }
 
-/// Contenu de la bannière d'accueil (texte uniquement, sans photo).
-class HeroContent {
+/// Une bannière du carrousel de l'accueil.
+class HeroSlide {
+  /// Début du titre (blanc) et fin du titre (orange).
   final String title;
-  final String titleAccent;
-  final String subtitle;
+  final String accent;
+  final String description;
   final String ctaLabel;
 
-  const HeroContent({
+  /// Illustration affichée à droite (assets/images/...).
+  final String illustration;
+
+  /// Page ouverte par le bouton. Si null, le bouton mène au menu complet.
+  final String? url;
+  final String urlTitle;
+  final bool requiresLocation;
+
+  const HeroSlide({
     required this.title,
-    required this.titleAccent,
-    required this.subtitle,
+    required this.accent,
+    required this.description,
     required this.ctaLabel,
+    required this.illustration,
+    this.url,
+    this.urlTitle = '',
+    this.requiresLocation = false,
   });
 }
 
 /// Configuration centrale de l'application.
 ///
 /// Toutes les URL du site sont regroupées ICI. Pour changer une adresse
-/// (ex: si une page change de chemin sur e-gospel.com), il suffit de
+/// (ex : si une page change de chemin sur e-gospel.com), il suffit de
 /// modifier la valeur correspondante ci-dessous — aucun autre fichier
 /// n'a besoin d'être touché.
 class AppConfig {
@@ -55,22 +64,49 @@ class AppConfig {
   static const String appSlogan = "La lumière de l'Évangile, partout";
   static const String baseUrl = 'https://e-gospel.com';
 
+  /// Numéro de livraison affiché en bas du Menu : permet de vérifier d'un
+  /// coup d'œil quelle version est installée sur le téléphone.
+  static const String versionLabel = 'Version 4.1 · 28 nov. 2026';
+
   // ---------------------------------------------------------------------
-  // Bannière d'accueil
+  // Bannières du carrousel de l'accueil (3)
   // ---------------------------------------------------------------------
-  static const HeroContent hero = HeroContent(
-    title: 'Musique, prière et',
-    titleAccent: 'enseignements',
-    subtitle: 'Des contenus pour nourrir votre foi, où que vous soyez.',
-    ctaLabel: 'Découvrir E-Gospel',
-  );
+  static const List<HeroSlide> heroSlides = [
+    HeroSlide(
+      title: 'Musique, prière et',
+      accent: 'enseignements',
+      description: 'Des contenus pour nourrir votre foi, où que vous soyez.',
+      ctaLabel: 'Découvrir E-Gospel',
+      illustration: 'assets/images/hero_bible.png',
+    ),
+    HeroSlide(
+      title: 'Les chants qui ont marqué',
+      accent: 'votre foi',
+      description: "Retrouvez la musique gospel, d'hier à aujourd'hui.",
+      ctaLabel: 'Écouter maintenant',
+      illustration: 'assets/images/hero_music.png',
+      url: musicUrl,
+      urlTitle: 'Musique',
+    ),
+    HeroSlide(
+      title: 'Une église',
+      accent: 'près de chez vous',
+      description: 'Découvrez les assemblées chrétiennes de votre région.',
+      ctaLabel: 'Trouver une église',
+      illustration: 'assets/images/hero_church.png',
+      url: churchesUrl,
+      urlTitle: 'Églises',
+      requiresLocation: true,
+    ),
+  ];
 
   // ---------------------------------------------------------------------
   // URLs des rubriques (à adapter si besoin)
   // ---------------------------------------------------------------------
   static const String musicUrl = 'https://e-gospel.com/music-chretienne-copy/';
   static const String videosUrl = 'https://e-gospel.com/gospel-nostalgie/';
-  static const String exhortationUrl = 'https://e-gospel.com/predication-et-enseignement/';
+  static const String exhortationUrl =
+      'https://e-gospel.com/predication-et-enseignement/';
   static const String prayerUrl = 'https://e-gospel.com/ma-priere/';
   static const String churchesUrl = 'https://e-gospel.com/eglise/';
   static const String memoryUrl = 'https://e-gospel.com/memoire/';
@@ -79,7 +115,7 @@ class AppConfig {
   static const String othersUrl = 'https://e-gospel.com/';
 
   // ---------------------------------------------------------------------
-  // Liste des rubriques utilisée par les écrans (accueil + menu)
+  // Rubriques (accueil : les 4 premières ; menu : toutes)
   // ---------------------------------------------------------------------
   static const List<AppCategory> categories = [
     AppCategory(
@@ -93,28 +129,24 @@ class AppConfig {
       url: videosUrl,
       icon: Icons.smart_display_outlined,
       description: 'Témoignages, concerts, interviews et bien plus.',
-      imagePath: 'assets/images/categories/videos.jpg',
     ),
     AppCategory(
-      title: 'Exhortations',
+      title: 'Études',
       url: exhortationUrl,
       icon: Icons.menu_book_outlined,
       description: 'Des messages pour fortifier votre foi.',
-      imagePath: 'assets/images/categories/exhortations.jpg',
     ),
     AppCategory(
       title: 'Prière',
       url: prayerUrl,
       icon: Icons.volunteer_activism_outlined,
       description: 'Confiez vos intentions et demeurez dans la présence de Dieu.',
-      imagePath: 'assets/images/categories/priere.jpg',
     ),
     AppCategory(
       title: 'Églises',
       url: churchesUrl,
       icon: Icons.church_outlined,
       description: 'Découvrez les églises et assemblées de votre région.',
-      imagePath: 'assets/images/categories/eglises.jpg',
       requiresLocation: true,
     ),
     AppCategory(
@@ -122,43 +154,46 @@ class AppConfig {
       url: memoryUrl,
       icon: Icons.image_outlined,
       description: 'Hommages et souvenirs de serviteurs de Dieu.',
-      imagePath: 'assets/images/categories/memoire.jpg',
     ),
     AppCategory(
       title: 'Formations',
       url: formationsUrl,
       icon: Icons.school_outlined,
       description: 'Apprenez, grandissez, équipez-vous pour le ministère.',
-      imagePath: 'assets/images/categories/formations.jpg',
     ),
     AppCategory(
       title: 'Événements',
       url: eventsUrl,
       icon: Icons.calendar_month_outlined,
       description: 'Concerts, conférences, rencontres à ne pas manquer.',
-      imagePath: 'assets/images/categories/evenements.jpg',
     ),
     AppCategory(
       title: 'Autres contenus',
       url: othersUrl,
       icon: Icons.apps_rounded,
       description: 'Tout le reste du contenu disponible sur e-gospel.com.',
-      imagePath: 'assets/images/categories/autres.jpg',
     ),
   ];
 
-  // Rubriques mises en avant sur la page d'accueil (les 8 premières,
-  // affichées en grille 4 colonnes x 2 lignes).
+  /// Rubriques affichées sur l'accueil.
   static List<AppCategory> get featuredCategories =>
-      categories.take(8).toList();
+      categories.take(4).toList();
 
   // ---------------------------------------------------------------------
-  // Charte graphique
+  // Charte graphique (d'après la maquette)
   // ---------------------------------------------------------------------
-  static const Color colorOrange = Color(0xFFF57905);
-  static const Color colorBlack = Color(0xFF141414);
+  static const Color colorOrange = Color(0xFFFF8200);
+  static const Color colorBlack = Color(0xFF171717);
   static const Color colorWhite = Color(0xFFFFFFFF);
-  static const Color colorLightGrey = Color(0xFFF6F6F5);
-  static const Color colorBorder = Color(0xFFE7E5E2);
-  static const Color colorTextMuted = Color(0xFF6B6B6B);
+  static const Color colorLightGrey = Color(0xFFF7F7F7);
+  static const Color colorBorder = Color(0xFFEEEEEE);
+  static const Color colorTextMuted = Color(0xFF757575);
+  static const Color colorVerseBg = Color(0xFFFFF3E5);
+
+  static const double radiusSmall = 12;
+  static const double radiusMedium = 20;
+  static const double radiusLarge = 28;
+
+  /// Largeur maximale du contenu (tablettes).
+  static const double maxContentWidth = 480;
 }
