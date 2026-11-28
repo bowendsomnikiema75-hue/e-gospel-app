@@ -36,7 +36,7 @@ class _IconGridItemState extends State<IconGridItem> {
         curve: Curves.easeOut,
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 84),
+            constraints: const BoxConstraints(maxWidth: 76),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -45,16 +45,16 @@ class _IconGridItemState extends State<IconGridItem> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppConfig.colorBlack,
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Icon(
                       widget.category.icon,
                       color: AppConfig.colorOrange,
-                      size: 30,
+                      size: 28,
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Text(
                   widget.category.title,
                   textAlign: TextAlign.center,

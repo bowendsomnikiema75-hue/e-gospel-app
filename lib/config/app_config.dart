@@ -66,7 +66,7 @@ class AppConfig {
 
   /// Numéro de livraison affiché en bas du Menu : permet de vérifier d'un
   /// coup d'œil quelle version est installée sur le téléphone.
-  static const String versionLabel = 'Version 4.1 · 28 nov. 2026';
+  static const String versionLabel = 'Version 4.2 · 28 nov. 2026';
 
   // ---------------------------------------------------------------------
   // Bannières du carrousel de l'accueil (3)
@@ -115,7 +115,7 @@ class AppConfig {
   static const String othersUrl = 'https://e-gospel.com/';
 
   // ---------------------------------------------------------------------
-  // Rubriques (accueil : les 4 premières ; menu : toutes)
+  // Rubriques (accueil : 4 mises en avant ; menu : toutes)
   // ---------------------------------------------------------------------
   static const List<AppCategory> categories = [
     AppCategory(
@@ -175,9 +175,18 @@ class AppConfig {
     ),
   ];
 
-  /// Rubriques affichées sur l'accueil.
-  static List<AppCategory> get featuredCategories =>
-      categories.take(4).toList();
+  /// Rubriques mises en avant sur l'accueil, dans cet ordre.
+  static const List<String> featuredTitles = [
+    'Églises',
+    'Vidéos',
+    'Études',
+    'Prière',
+  ];
+
+  static List<AppCategory> get featuredCategories => [
+        for (final title in featuredTitles)
+          categories.firstWhere((c) => c.title == title),
+      ];
 
   // ---------------------------------------------------------------------
   // Charte graphique (d'après la maquette)
@@ -192,7 +201,7 @@ class AppConfig {
 
   static const double radiusSmall = 12;
   static const double radiusMedium = 20;
-  static const double radiusLarge = 28;
+  static const double radiusLarge = 24;
 
   /// Largeur maximale du contenu (tablettes).
   static const double maxContentWidth = 480;

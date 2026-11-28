@@ -45,7 +45,7 @@ class _HeroBannerState extends State<HeroBanner> {
     final slides = AppConfig.heroSlides;
     // La hauteur suit la taille de police du téléphone (accessibilité).
     final textScale = MediaQuery.textScalerOf(context).scale(1.0);
-    final height = 360.0 * (textScale > 1 ? textScale : 1.0);
+    final height = 250.0 * (textScale > 1 ? textScale : 1.0);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppConfig.radiusLarge),
@@ -63,8 +63,8 @@ class _HeroBannerState extends State<HeroBanner> {
               ),
             ),
             Positioned(
-              left: 24,
-              bottom: 22,
+              left: 22,
+              bottom: 16,
               child: Row(
                 children: List.generate(slides.length, (index) {
                   final active = index == _page;
@@ -130,13 +130,13 @@ class _SlideView extends StatelessWidget {
           LayoutBuilder(
             builder: (context, constraints) {
               final titleSize =
-                  (constraints.maxWidth * 0.078).clamp(21.0, 28.0).toDouble();
+                  (constraints.maxWidth * 0.068).clamp(19.0, 24.0).toDouble();
               return Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 24, 0, 48),
+                  padding: const EdgeInsets.fromLTRB(22, 18, 0, 40),
                   child: SizedBox(
-                    width: constraints.maxWidth * 0.62,
+                    width: constraints.maxWidth * 0.64,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,26 +162,27 @@ class _SlideView extends StatelessWidget {
                             height: 1.2,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         Text(
                           slide.description,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: AppConfig.colorWhite.withOpacity(0.78),
-                            fontSize: 13.5,
-                            height: 1.45,
+                            fontSize: 13,
+                            height: 1.4,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 14),
                         ElevatedButton(
                           onPressed: onPressed,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppConfig.colorOrange,
                             foregroundColor: AppConfig.colorWhite,
                             elevation: 0,
-                            padding: const EdgeInsets.fromLTRB(18, 13, 12, 13),
+                            padding: const EdgeInsets.fromLTRB(16, 11, 10, 11),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  AppConfig.radiusMedium),
+                              borderRadius: BorderRadius.circular(14),
                             ),
                           ),
                           child: Row(
@@ -194,7 +195,7 @@ class _SlideView extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 14,
+                                    fontSize: 13.5,
                                   ),
                                 ),
                               ),

@@ -24,7 +24,7 @@ class EGospelBottomNav extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: SizedBox(
-          height: 76,
+          height: 64,
           child: Row(
             children: [
               Expanded(
@@ -83,7 +83,7 @@ class _NavItem extends StatelessWidget {
               active ? activeIcon : icon,
               key: ValueKey(active),
               color: color,
-              size: 26,
+              size: 24,
             ),
           ),
           const SizedBox(height: 3),

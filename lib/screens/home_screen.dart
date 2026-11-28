@@ -58,21 +58,20 @@ class _HomeScreenState extends State<HomeScreen>
                 constraints:
                     const BoxConstraints(maxWidth: AppConfig.maxContentWidth),
                 child: ListView(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
                   children: [
                     _buildHeader(),
-                    const SizedBox(height: 8),
                     HeroBanner(onDiscover: widget.onSeeAllPressed),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 12),
                     const DailyVerseCard(),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
                           'Catégories',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.w700,
                             color: AppConfig.colorBlack,
                           ),
@@ -96,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                       ],
                     ),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 10),
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -105,8 +104,8 @@ class _HomeScreenState extends State<HomeScreen>
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 4,
                         crossAxisSpacing: 12,
-                        mainAxisSpacing: 16,
-                        mainAxisExtent: 112,
+                        mainAxisSpacing: 12,
+                        mainAxisExtent: 104,
                       ),
                       itemBuilder: (context, index) => IconGridItem(
                         category: AppConfig.featuredCategories[index],
@@ -124,15 +123,15 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildHeader() {
     return SizedBox(
-      height: 96,
+      height: 76,
       child: Row(
         children: [
           Image.asset(
             'assets/images/logo.png',
-            width: 64,
-            height: 64,
+            width: 52,
+            height: 52,
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -151,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ],
                   ),
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -159,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen>
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    fontSize: 13,
+                    fontSize: 12.5,
                     color: AppConfig.colorTextMuted,
                   ),
                 ),

@@ -108,111 +108,114 @@ class DailyVerseCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       clipBehavior: Clip.antiAlias,
-      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppConfig.colorVerseBg,
         borderRadius: BorderRadius.circular(AppConfig.radiusLarge),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Row(
-            children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                decoration: BoxDecoration(
-                  color: AppConfig.colorOrange,
-                  borderRadius: BorderRadius.circular(AppConfig.radiusMedium),
-                ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.menu_book_rounded,
-                        size: 14, color: AppConfig.colorWhite),
-                    SizedBox(width: 6),
-                    Text(
-                      'VERSET DU JOUR',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.8,
-                        color: AppConfig.colorWhite,
+          // Petite Bible illustrée, en filigrane dans le coin
+          Positioned(
+            right: -14,
+            bottom: -18,
+            child: Opacity(
+              opacity: 0.22,
+              child: Image.asset('assets/images/verse_bible.png', width: 124),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 12, 6),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppConfig.colorOrange,
+                          borderRadius:
+                              BorderRadius.circular(AppConfig.radiusMedium),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.menu_book_rounded,
+                                size: 13, color: AppConfig.colorWhite),
+                            SizedBox(width: 5),
+                            Text(
+                              'VERSET DU JOUR',
+                              style: TextStyle(
+                                fontSize: 10.5,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.8,
+                                color: AppConfig.colorWhite,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            date,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppConfig.colorTextMuted,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
                   child: Text(
-                    date,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    verse.text,
                     style: const TextStyle(
-                      fontSize: 12,
-                      color: AppConfig.colorTextMuted,
+                      fontSize: 16.5,
+                      height: 1.4,
+                      fontWeight: FontWeight.w600,
+                      color: AppConfig.colorBlack,
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 18),
-          Text(
-            verse.text,
-            style: const TextStyle(
-              fontSize: 18,
-              height: 1.42,
-              fontWeight: FontWeight.w600,
-              color: AppConfig.colorBlack,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 4),
+                Row(
                   children: [
-                    Text(
-                      verse.reference,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: AppConfig.colorTextMuted,
+                    Expanded(
+                      child: Text(
+                        verse.reference,
+                        style: const TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w700,
+                          color: AppConfig.colorTextMuted,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        _IconAction(
-                          icon: Icons.content_copy_rounded,
-                          tooltip: 'Copier le verset',
-                          onTap: () => _copy(context, verse),
-                        ),
-                        const SizedBox(width: 8),
-                        _IconAction(
-                          icon: Icons.share_outlined,
-                          tooltip: 'Partager sur WhatsApp',
-                          onTap: () => _shareWhatsApp(context, verse),
-                        ),
-                      ],
+                    _IconAction(
+                      icon: Icons.content_copy_rounded,
+                      tooltip: 'Copier le verset',
+                      onTap: () => _copy(context, verse),
+                    ),
+                    _IconAction(
+                      icon: Icons.share_outlined,
+                      tooltip: 'Partager sur WhatsApp',
+                      onTap: () => _shareWhatsApp(context, verse),
                     ),
                   ],
                 ),
-              ),
-              // Petite Bible illustrée, qui dépasse légèrement du coin
-              Transform.translate(
-                offset: const Offset(20, 20),
-                child: Image.asset(
-                  'assets/images/verse_bible.png',
-                  width: 116,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -233,20 +236,27 @@ class _IconAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Zone de toucher de 44 px, pastille visible de 34 px.
     return Tooltip(
       message: tooltip,
-      child: InkWell(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConfig.radiusSmall),
-        child: Container(
-          width: 40,
-          height: 40,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: AppConfig.colorWhite,
-            borderRadius: BorderRadius.circular(AppConfig.radiusSmall),
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Center(
+            child: Container(
+              width: 34,
+              height: 34,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppConfig.colorWhite,
+                borderRadius: BorderRadius.circular(AppConfig.radiusSmall),
+              ),
+              child: Icon(icon, size: 17, color: AppConfig.colorBlack),
+            ),
           ),
-          child: Icon(icon, size: 18, color: AppConfig.colorBlack),
         ),
       ),
     );
